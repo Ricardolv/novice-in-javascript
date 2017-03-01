@@ -22,11 +22,11 @@ contador.incrementar();
 contador.reset();
 
 console.log('=========================');
-console.log('Com Module Pattern');
 
 // 	Module Pattern
 //	Outros exemplos: 
 // 	https://addyosmani.com/resources/essentialjsdesignpatterns/book/#modulepatternjavascript
+console.log('Com Module Pattern');
 
 var contadorMP = (function() {
 	var valor = 0; //privado 
@@ -46,5 +46,33 @@ var contadorMP = (function() {
 contadorMP.incrementar();
 contadorMP.incrementar();
 contadorMP.reset();
+
+console.log('=========================');
+
+//Outra forma Module Pattern
+console.log('Outra forma de Module Pattern');
+
+var contadorOuther = (function() {
+	var valor = 0; //privado 
+
+	var incrementar = function() {
+		valor++;
+	};
+
+	var reset = function() {
+		console.log('Valor do contador:', valor);
+		valor = 0;
+	}
+
+	return {
+		incrementar: incrementar,
+		reset: reset
+	}
+
+})();
+
+contadorOuther.incrementar();
+contadorOuther.incrementar();
+contadorOuther.reset();
 
 
