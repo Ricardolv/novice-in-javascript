@@ -1,3 +1,5 @@
+//Como funciona o shadowing
+
 var volks = {
 	fabricante: 'VW'
 }
