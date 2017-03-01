@@ -1,6 +1,5 @@
-// Disparando eventos customizados
+// Chamando funções através de call e apply
 var Estado = (function() {
-	
 	function Estado() {
 		this.comboEstado = $('#combo-estado');
 		this.emitter = $({});
@@ -16,15 +15,15 @@ var Estado = (function() {
 			error: onError
 		});
 
-		this.comboEstado.on('change', onEstadoAlterado.bind(this)); 
+		this.comboEstado.on('change', onEstadoAlterado.bind(this));
 	}
 
-	function onEstadoAlterado(argument) {
+	function onEstadoAlterado() {
 		this.emitter.trigger('alterado', this.comboEstado.val());
 	}
 
 	function onEstadosRetornados(estados) {
-		this.comboEstado.html('<option value="" >Selecione o estado</option>');
+		this.comboEstado.html('<option value="">Selecione o estado</option>');
 		estados.forEach(function(estado) {
 			var optionEstado = $('<option>').val(estado.uf).text(estado.nome);
 			this.comboEstado.append(optionEstado);
@@ -40,7 +39,6 @@ var Estado = (function() {
 })();
 
 var Cidade = (function() {
-
 	function Cidade(estado) {
 		this.comboCidade = $('#combo-cidade');
 		this.estado = estado;
@@ -52,7 +50,6 @@ var Cidade = (function() {
 
 	function onEstadoSelecionado(evento, uf) {
 		if (uf) {
-
 			$.ajax({
 				url: 'http://localhost:8080/cidades',
 				method: 'GET',
@@ -63,17 +60,20 @@ var Cidade = (function() {
 				success: onCidadesRetornadas.bind(this),
 				error: onError
 			});
-
 		} else {
-			this.comboCidade.html('');
-			this.comboCidade.attr('disabled', 'disabled');
+			reset.call(this);
+			//reset.apply(this);
 		}
+	}
 
+	function reset() {
+		this.comboCidade.html('');
+		this.comboCidade.attr('disabled', 'disabled');
 	}
 
 	function onCidadesRetornadas(cidades) {
 		this.comboCidade.removeAttr('disabled');
-		this.comboCidade.html('<option value="" >Selecione a cidade</option>');
+		this.comboCidade.html('<option>Selecione a cidade</option>');
 		cidades.forEach(function(cidade) {
 			var optionCidade = $('<option>').val(cidade.codigo).text(cidade.nome);
 			this.comboCidade.append(optionCidade);
@@ -81,7 +81,7 @@ var Cidade = (function() {
 	}
 
 	function onError() {
-		alert('Erro carregando cidades do servidor!');
+		alert('Erro carregando cidades');
 	}
 
 	return Cidade;
@@ -91,6 +91,6 @@ $(function() {
 	var estado = new Estado();
 	estado.iniciar();
 
-	 var cidade = new Cidade(estado);
-	 cidade.iniciar();
+	var cidade = new Cidade(estado);
+	cidade.iniciar();
 });
